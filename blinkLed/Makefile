@@ -15,6 +15,9 @@ override CFLAGS= -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 blinkLed.elf: blinkLed.o
 	$(CC) $(CFLAGS) -o $@ $^
 
+blinkLedInterrupt.elf: blinkLedInterrupt.o
+	$(CC) $(CFLAGS) -o $@ $^
+
 %.hex: %.elf 
 	$(OBJCOPY) -j .text -j .data -O ihex $^ $@
 
