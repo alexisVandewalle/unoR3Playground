@@ -1,20 +1,19 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#define F_CPU 16000000
+#define F_CPU 16000000UL
 #include <util/delay.h>
 #define F_TIMER0_CLOCK (F_CPU/1024)
 #define MAX_COUNT 125
-#define F_TIMER0 (F_TIMER0_CLOCK/MAX_COUNT)
+#define N_CYCLE_TIMER0 (MAX_COUNT*1000UL)
+#define PERIOD_INTERRUPT_TIMER0 (N_CYCLE_TIMER0/F_TIMER0_CLOCK)
 
-
-static const int delayMs = 1000;
 
 ISR(TIMER0_COMPA_vect){
     static int interruptCnt = 0;
     interruptCnt += 1;
-    int currentDelayMs = (int)(((float)interruptCnt*1000.0f)/((float)F_TIMER0));
-    if(currentDelayMs > delayMs){
-        PORTB = (~(PORTB & _BV(PORTB5))) & (PORTB | _BV(PORTB5));
+    int currentDelayMs = interruptCnt*PERIOD_INTERRUPT_TIMER0;
+    if(currentDelayMs > 1000){
+        PORTB ^= _BV(PORTB5);
         interruptCnt = 0;
     }
 }
@@ -26,11 +25,11 @@ int main(void){
     DDRB |= _BV(DDB5);
     PORTB &= ~_BV(PORTB5);
     // set timer 0 to CTC mode (compare and clear on match)
-    TCCR0A |= (1 << WGM00);
+    TCCR0A |= (2 << WGM00);
     // set clock prescaler to 1024
-    TCCR0B |= (0x9 << CS02); 
+    TCCR0B |= (0x5 << CS00); 
     // set max count for OCR0A
-    OCR0A = 0xFF;
+    OCR0A = MAX_COUNT;
     // enable interrupt
     TIMSK0 |= _BV(OCIE0A);
     sei();
