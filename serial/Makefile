@@ -10,14 +10,17 @@ BUILD_DIR=build
 # Override is only needed by avr-lib build system.
 override CFLAGS= -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
+SRC=$(wildcard *.c)
+OBJS=$(patsubst %.c, $(BUILD_DIR)/%.o, $(SRC))
+
 $(BUILD_DIR)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-$(BUILD_DIR)/serial.elf: $(BUILD_DIR)/serial.o
-	$(CC) $(CFLAGS) -o $@ $^
+serial.elf: $(OBJS)
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^
 
-%.hex: $(BUILD_DIR)/%.elf 
-	$(OBJCOPY) -j .text -j .data -O ihex $^ $(BUILD_DIR)/$@
+%.hex: %.elf 
+	$(OBJCOPY) -j .text -j .data -O ihex $(BUILD_DIR)/$< $(BUILD_DIR)/$@
 
 .PHONY: clean mrproper
 
