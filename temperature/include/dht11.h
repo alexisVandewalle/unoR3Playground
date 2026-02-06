@@ -17,9 +17,46 @@
 #define DHT11_TIMEOUT (100/TIMER0_STEP_US)
 #define DHT11_TIMEOUT_CODE 2
 
+/**
+ * Set timer 0 in normal mode and set prescale factor
+ */
 void dht11_configTimer();
+
+/**
+ * Send start signal to DHT11 sensor and configure data wire as input
+ * @param dirReg direction register
+ * @param dirRegBit bit number in dirReg
+ * @param port port register
+ * @param portBit bit number in port
+ */
 void dht11_sendStartSignal(volatile uint8_t* dirReg, uint8_t dirRegBit, volatile uint8_t* port, char portBit);
+
+/**
+ * After start signal is sent, sensor start to output data. This function retrieves the data
+ * and save it in temperature and humidity variable
+ * @param dirReg direction register
+ * @param dirRegBit bit number in dirReg
+ * @param pin pin register
+ * @param pinBit bit number in pin register
+ * @param temp variable in which to store temperature
+ * @param humidity variable in which to store humidity
+ * @return 1 if data was succesfuly read, 0 if parity chek failed, 2 if a timeout occurs
+ */
 uint8_t dht11_getData(volatile uint8_t* dirReg, uint8_t dirRegBit, volatile uint8_t* pin, volatile uint8_t pinBit, uint8_t* temp, uint8_t* humidity);
+
+/**
+ * Configure timer, send start signal and get data
+ * 
+ * @param dirReg direction register
+ * @param dirRegBit bit number in dirReg
+ * @param port port register
+ * @param portBit bit number in port
+ * @param pin pin register
+ * @param pinBit bit number in pin register
+ * @param temp variable in which to store temperature
+ * @param humidity variable in which to store humidity
+ * @return 1 if data was succesfuly read, 0 if parity chek failed, 2 if a timeout occurs
+ */
 uint8_t dht11_measure(
             volatile uint8_t* dirReg, uint8_t dirRegBit, 
             volatile uint8_t* port, char portBit,
