@@ -6,13 +6,14 @@
 #define MAX_COUNT 125
 #define N_CYCLE_TIMER0 (MAX_COUNT*1000UL)
 #define PERIOD_INTERRUPT_TIMER0 (N_CYCLE_TIMER0/F_TIMER0_CLOCK)
-
+#define TOOGLE_DELAY 1000
 
 ISR(TIMER0_COMPA_vect){
+    // static variable which count number of interruption on Timer0 compare match
     static int interruptCnt = 0;
     interruptCnt += 1;
     int currentDelayMs = interruptCnt*PERIOD_INTERRUPT_TIMER0;
-    if(currentDelayMs > 1000){
+    if(currentDelayMs > TOOGLE_DELAY){
         PORTB ^= _BV(PORTB5);
         interruptCnt = 0;
     }
@@ -20,6 +21,7 @@ ISR(TIMER0_COMPA_vect){
 
 
 int main(void){
+    // disable interrupts
     cli();
     // set port B5 as output
     DDRB |= _BV(DDB5);
