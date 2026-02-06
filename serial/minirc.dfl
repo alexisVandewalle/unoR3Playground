@@ -1,0 +1,5 @@
+pu linewrap          Yes
+pu addcarreturn      Yes
+pu bits             8
+pu parity           N
+pu stopbits         1
