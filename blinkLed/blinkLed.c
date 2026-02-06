@@ -9,7 +9,6 @@ int main(void){
         // set turn led on/off setting value of port B5
         PORTB ^= _BV(PORTB5);
         _delay_ms(1000);
-
     }
     return 0;
 }
