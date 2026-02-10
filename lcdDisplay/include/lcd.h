@@ -49,7 +49,7 @@
 #define IR_REGISTER 0
 #define DR_REGISTER 2
 #define LCD_ENABLE (1 << 2)
-#define LCD_DELAY_US 1
+#define LCD_DELAY_MS 2
 
 // get busy flag and address after read command
 #define LCD_getBusyFlag(reg) ((reg & 0x80)>>7)

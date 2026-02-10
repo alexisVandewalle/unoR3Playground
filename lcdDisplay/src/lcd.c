@@ -1,3 +1,4 @@
+#include "macro.h"
 #include "lcd.h"
 #ifndef F_CPU
 #define F_CPU 16000000UL
@@ -6,15 +7,27 @@
 
 void LCD_init(LcdIOSetup setup){
     // set portDB as output
+#ifdef LCD_INTERFACE_4B
+    *(setup.dirRegDB) = (*(setup.dirRegDB) & 0x0F) | 0xF0;
+#else
     *(setup.dirRegDB) = 0xFF;
+#endif
     // set output value
+#ifdef LCD_INTERFACE_4B
+    *(setup.portDB) = (*(setup.portDB) & 0x0F) | 0x0;
+#else
     *(setup.portDB) = 0;
+#endif
     // set port control as output (3 wire R/S R/W and Enable)
     *(setup.dirRegCtrl) |= 7 << setup.offsetCtrl;
     // set output value
     *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
     // set 8 bit interface
+#ifdef LCD_INTERFACE_4B
+    LCD_write(setup, FUNCTION_SET|INTERFACE_4B|DISPLAY_LINE_2|FONT_TYPE_SMALL, IR_REGISTER);
+#else
     LCD_write(setup, FUNCTION_SET|INTERFACE_8B|DISPLAY_LINE_2|FONT_TYPE_SMALL, IR_REGISTER);
+#endif
     // display OFF
     LCD_write(setup, ON_OFF_CTRL|DISP_OFF, IR_REGISTER); 
     // clear display
@@ -28,27 +41,52 @@ void LCD_init(LcdIOSetup setup){
 
 void LCD_write(LcdIOSetup setup, uint8_t data, uint8_t reg){
     *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
+#ifdef LCD_INTERFACE_4B
+    *(setup.portCtrl) |= reg | LCD_WRITE | LCD_ENABLE;
+    *(setup.portDB) = (*(setup.portDB) & 0x0F) | (data & 0xF0);
+    _delay_ms(LCD_DELAY_MS);
+
+    *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
+    _delay_ms(LCD_DELAY_MS);
+    *(setup.portCtrl) |= reg | LCD_WRITE | LCD_ENABLE;
+    *(setup.portDB) = (*(setup.portDB) & 0x0F) | (data << 4);
+    _delay_ms(LCD_DELAY_MS);
+#else 
     *(setup.portCtrl) |= reg | LCD_WRITE | LCD_ENABLE;
     *(setup.portDB) = data;
-    _delay_us(LCD_DELAY_US);
+    _delay_ms(LCD_DELAY_MS);
+#endif
     *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
 }
 
 uint8_t LCD_read(LcdIOSetup setup, uint8_t reg){
     // set portDB as input / disable pull up
+#ifdef LCD_INTERFACE_4B
+    *(setup.dirRegDB) &= 0x0F;
+    *(setup.portDB) &= 0x0F;
+#else
     *(setup.dirRegDB) = 0;
     *(setup.portDB) = 0;
+#endif
 
     *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
     *(setup.portCtrl) |= reg | LCD_READ | LCD_ENABLE;
-    _delay_us(LCD_DELAY_US);
+    _delay_ms(LCD_DELAY_MS);
     *(setup.portCtrl) &= ~(7 << setup.offsetCtrl);
-    
+#ifdef LCD_INTERFACE_4B
+    uint8_t out = *(setup.pinDB) & 0xF0;
+#else
     uint8_t out = *(setup.pinDB);
+#endif
 
     // set portDB back as output
+#ifdef LCD_INTERFACE_4B
+    *(setup.dirRegDB) |= 0xF0;
+    *(setup.portDB) &= 0x0F;
+#else
     *(setup.dirRegDB) = 0xFF;
     *(setup.portDB) = 0;
+#endif
 
     return out;
 }

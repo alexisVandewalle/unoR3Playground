@@ -1,4 +1,4 @@
-#define F_CPU 16000000UL
+#include "macro.h"
 #include <util/delay.h>
 #include <avr/io.h>
 #include "serial.h"
@@ -24,16 +24,16 @@ int main(void){
         // test write str on 2 rows
         LCD_writeStr(setup, "test write\non 2 rows too large", strlen("test write\non 2 rows too large"), 2);
         _delay_ms(1000);
-        // // test display off
+        // test display off
         LCD_displayOff(setup);
         _delay_ms(1000);
         // test display on
         LCD_displayOn(setup);
-        _delay_ms(1000);
+         _delay_ms(1000);
         // test cursor
         LCD_clear(setup);
-        LCD_cursorOn(setup);
         LCD_writeStr(setup, "test cursor", strlen("test cursor"), 0);
+        LCD_cursorOn(setup);
         _delay_ms(5000);
         LCD_cursorOff(setup);
         _delay_ms(1000); 
