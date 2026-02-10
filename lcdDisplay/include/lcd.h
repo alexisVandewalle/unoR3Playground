@@ -29,7 +29,7 @@
 
 // function set
 #define FUNCTION_SET 32
-#define INTERFACE_8B 16
+#define INTERFACE_8B 16 // only work with 8 bits for the moment
 #define INTERFACE_4B 0
 #define DISPLAY_LINE_2 8
 #define DISPLAY_LINE_1 0
@@ -49,7 +49,7 @@
 #define IR_REGISTER 0
 #define DR_REGISTER 2
 #define LCD_ENABLE (1 << 2)
-#define LCD_DELAY_MS 2
+#define LCD_DELAY_US 1
 
 // get busy flag and address after read command
 #define LCD_getBusyFlag(reg) ((reg & 0x80)>>7)
@@ -69,11 +69,21 @@ typedef struct{
     volatile uint8_t* pinDB;
 } LcdIOSetup;
 
-void LCD_initIO(LcdIOSetup setup);
+void LCD_init(LcdIOSetup setup);
 
 void LCD_write(LcdIOSetup setup, uint8_t data, uint8_t reg);
 
 uint8_t LCD_read(LcdIOSetup setup, uint8_t reg);
 
 void LCD_writeStr(LcdIOSetup setup, char str[], uint8_t len, uint8_t startPos);
+
+void LCD_clear(LcdIOSetup setup);
+
+void LCD_cursorOn(LcdIOSetup setup);
+
+void LCD_cursorOff(LcdIOSetup setup);
+
+void LCD_displayOff(LcdIOSetup setup);
+
+void LCD_displayOn(LcdIOSetup setup);
 #endif
