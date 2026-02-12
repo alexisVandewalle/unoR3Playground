@@ -49,7 +49,9 @@
 #define IR_REGISTER 0
 #define DR_REGISTER 2
 #define LCD_ENABLE (1 << 2)
-#define LCD_DELAY_MS 2
+#define LCD_DELAY_US 1
+#define LCD_EXEC_DELAY_SHORT_US 50
+#define LCD_EXEC_DELAY_LONG_MS 2
 
 // get busy flag and address after read command
 #define LCD_getBusyFlag(reg) ((reg & 0x80)>>7)
@@ -72,6 +74,8 @@ typedef struct{
 void LCD_init(LcdIOSetup setup);
 
 void LCD_write(LcdIOSetup setup, uint8_t data, uint8_t reg);
+
+void LCD_write4Bits(LcdIOSetup setup, uint8_t data, uint8_t reg);
 
 uint8_t LCD_read(LcdIOSetup setup, uint8_t reg);
 

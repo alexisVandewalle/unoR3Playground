@@ -14,7 +14,7 @@ int main(void){
         0,
         &PIND
     };
-    _delay_ms(100);
+
     LCD_init(setup);
     while(1){
         LCD_writeStr(setup, "test write", strlen("test write"), 0);
