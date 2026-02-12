@@ -50,8 +50,8 @@
 #define DR_REGISTER 2
 #define LCD_ENABLE (1 << 2)
 #define LCD_DELAY_US 1
-#define LCD_EXEC_DELAY_SHORT_US 50
-#define LCD_EXEC_DELAY_LONG_MS 2
+#define LCD_EXEC_DELAY_SHORT_US 50 // execution delay of a short command
+#define LCD_EXEC_DELAY_LONG_MS 2 // execution delay of a long command
 
 // get busy flag and address after read command
 #define LCD_getBusyFlag(reg) ((reg & 0x80)>>7)
@@ -62,32 +62,69 @@
 
 #include <stdint.h>
 
+/**
+ * Struct to store register used to communicate with display
+ */
 typedef struct{
-    volatile uint8_t* dirRegDB;
-    volatile uint8_t* portDB;
-    volatile uint8_t* dirRegCtrl;
-    volatile uint8_t* portCtrl;
-    uint8_t offsetCtrl;
-    volatile uint8_t* pinDB;
+    volatile uint8_t* dirRegDB; // direction register for data exchange
+    volatile uint8_t* portDB; // port register for data exchange
+    volatile uint8_t* dirRegCtrl; // direction register for control pins (RW, RS, E)
+    volatile uint8_t* portCtrl; // port register for control pins (RS, RW, E)
+    uint8_t offsetCtrl; // pin offset for control register
+    volatile uint8_t* pinDB; // register for reading pin value (data pin)
 } LcdIOSetup;
 
+/**
+ * Perform inialisation of the display
+ */
 void LCD_init(LcdIOSetup setup);
 
+/**
+ * Send a command to the display
+ */
 void LCD_write(LcdIOSetup setup, uint8_t data, uint8_t reg);
 
+/**
+ * Send a command to the display. Send only the 4 Most significant bits
+ */
 void LCD_write4Bits(LcdIOSetup setup, uint8_t data, uint8_t reg);
 
+/**
+ * Read value given by the display (not tested)
+ */
 uint8_t LCD_read(LcdIOSetup setup, uint8_t reg);
 
+/**
+ * Write a string on the display
+ * @param setup
+ * @param str string to write
+ * @param len length of the string
+ * @param startPos offset with respect to the left side of the screen (use on offset > 40H for second line)
+ */
 void LCD_writeStr(LcdIOSetup setup, char str[], uint8_t len, uint8_t startPos);
 
+/**
+ * Send clear display command
+ */
 void LCD_clear(LcdIOSetup setup);
 
+/**
+ * Turn cursor on
+ */
 void LCD_cursorOn(LcdIOSetup setup);
 
+/**
+ * Turn cursor off
+ */
 void LCD_cursorOff(LcdIOSetup setup);
 
+/**
+ * Turn off the display
+ */
 void LCD_displayOff(LcdIOSetup setup);
 
+/**
+ * Turn on the display
+ */
 void LCD_displayOn(LcdIOSetup setup);
 #endif
