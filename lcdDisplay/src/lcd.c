@@ -22,25 +22,25 @@ void LCD_init(LcdIOSetup setup){
     // set 8 bit interface
 #ifdef LCD_INTERFACE_4B
     _delay_ms(15);
-    LCD_write4Bits(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write4Bits(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_ms(5);
-    LCD_write4Bits(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write4Bits(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_us(100);
-    LCD_write4Bits(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write4Bits(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
-    LCD_write4Bits(setup, FUNCTION_SET|INTERFACE_4B, IR_REGISTER);
+    LCD_write4Bits(setup, LCD_FUNCTION_SET|LCD_INTERFACE_4B, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
-    LCD_write(setup, FUNCTION_SET|INTERFACE_4B|DISPLAY_LINE_2|FONT_TYPE_SMALL, IR_REGISTER);
+    LCD_write(setup, LCD_FUNCTION_SET|LCD_INTERFACE_4B|LCD_DISPLAY_LINE_2|LCD_FONT_TYPE_SMALL, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 #else
     _delay_ms(15);
-    LCD_write(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_ms(5);
-    LCD_write(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_us(100);
-    LCD_write(setup, FUNCTION_SET|INTERFACE_8B, IR_REGISTER);
+    LCD_write(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
-    LCD_write(setup, FUNCTION_SET|INTERFACE_8B|DISPLAY_LINE_2|FONT_TYPE_SMALL, IR_REGISTER);
+    LCD_write(setup, LCD_FUNCTION_SET|LCD_INTERFACE_8B|LCD_DISPLAY_LINE_2|LCD_FONT_TYPE_SMALL, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 #endif
     // display OFF
@@ -48,7 +48,7 @@ void LCD_init(LcdIOSetup setup){
     // clear display
     LCD_clear(setup); 
     // set entry mode
-    LCD_write(setup, ENTRY_MODE_SET|MOVE_RIGHT, IR_REGISTER); 
+    LCD_write(setup, LCD_ENTRY_MODE_SET|LCD_MOVE_RIGHT, LCD_IR_REGISTER); 
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
     // display ON
     LCD_displayOn(setup);
@@ -121,7 +121,7 @@ uint8_t LCD_read(LcdIOSetup setup, uint8_t reg){
 }
 
 void LCD_writeStr(LcdIOSetup setup, char str[], uint8_t len, uint8_t startPos){
-    LCD_write(setup, SET_DDRAM_ADDR|startPos, IR_REGISTER);
+    LCD_write(setup, LCD_SET_DDRAM_ADDR|startPos, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
     uint8_t offsetLine = startPos;
     if(startPos & 0xF0){
@@ -136,37 +136,37 @@ void LCD_writeStr(LcdIOSetup setup, char str[], uint8_t len, uint8_t startPos){
             offsetLine = 0;
             startPos = LCD_ROW_2; 
             charIdxCurrentRow = 0;
-            LCD_write(setup, SET_DDRAM_ADDR|startPos, IR_REGISTER);
+            LCD_write(setup, LCD_SET_DDRAM_ADDR|startPos, LCD_IR_REGISTER);
             _delay_us(LCD_EXEC_DELAY_SHORT_US);
             continue;
         }
-        LCD_write(setup, str[i], DR_REGISTER);
+        LCD_write(setup, str[i], LCD_DR_REGISTER);
         _delay_us(LCD_EXEC_DELAY_SHORT_US);
         charIdxCurrentRow++;
     }
 }
 
 void LCD_clear(LcdIOSetup setup){
-    LCD_write(setup, CLEAR_DISPLAY, IR_REGISTER); 
+    LCD_write(setup, LCD_CLEAR_DISPLAY, LCD_IR_REGISTER); 
     _delay_ms(LCD_EXEC_DELAY_LONG_MS);
 }
 
 void LCD_cursorOn(LcdIOSetup setup){
-    LCD_write(setup, ON_OFF_CTRL|DISP_ON|BLINK_ON|CURSOR_ON, IR_REGISTER);
+    LCD_write(setup, LCD_ON_OFF_CTRL|LCD_DISP_ON|LCD_BLINK_ON|LCD_CURSOR_ON, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 }
 
 void LCD_cursorOff(LcdIOSetup setup){
-    LCD_write(setup, ON_OFF_CTRL|DISP_ON|BLINK_OFF|CURSOR_OFF, IR_REGISTER);
+    LCD_write(setup, LCD_ON_OFF_CTRL|LCD_DISP_ON|LCD_BLINK_OFF|LCD_CURSOR_OFF, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 }
 
 void LCD_displayOff(LcdIOSetup setup){
-    LCD_write(setup, ON_OFF_CTRL|DISP_OFF, IR_REGISTER);
+    LCD_write(setup, LCD_ON_OFF_CTRL|LCD_DISP_OFF, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 }
 
 void LCD_displayOn(LcdIOSetup setup){
-    LCD_write(setup, ON_OFF_CTRL|DISP_ON, IR_REGISTER);
+    LCD_write(setup, LCD_ON_OFF_CTRL|LCD_DISP_ON, LCD_IR_REGISTER);
     _delay_us(LCD_EXEC_DELAY_SHORT_US);
 }

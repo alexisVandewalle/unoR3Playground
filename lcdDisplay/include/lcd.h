@@ -2,52 +2,52 @@
 #ifndef LCD_H
 #define LCD_H
 
-#define CLEAR_DISPLAY 1
-#define RETURN_HOME 2
+#define LCD_CLEAR_DISPLAY 1
+#define LCD_RETURN_HOME 2
 
 // entry mode set
-#define ENTRY_MODE_SET 4
-#define MOVE_RIGHT 2 // no really usefull, better to use cursor_or_disp_shift
-#define MOVE_LEFT 0
-#define EN_SHIFT 1 // if enable the character are shifted at each insertion - cursor is fixed
+#define LCD_ENTRY_MODE_SET 4
+#define LCD_MOVE_RIGHT 2 // no really usefull, better to use cursor_or_disp_shift
+#define LCD_MOVE_LEFT 0
+#define LCD_EN_SHIFT 1 // if enable the character are shifted at each insertion - cursor is fixed
 
 // display ON/OFF control
-#define ON_OFF_CTRL 8
-#define DISP_ON 4
-#define DISP_OFF 0
-#define CURSOR_ON 2
-#define CURSOR_OFF 0
-#define BLINK_ON 1
-#define BLINK_OFF 0
+#define LCD_ON_OFF_CTRL 8
+#define LCD_DISP_ON 4
+#define LCD_DISP_OFF 0
+#define LCD_CURSOR_ON 2
+#define LCD_CURSOR_OFF 0
+#define LCD_BLINK_ON 1
+#define LCD_BLINK_OFF 0
 
 // cursor or display shift - usage not found for the moment
-// #define CURSOR_OR_DISP_SHIFT 16
-// #define CURSOR_MOVING 8
-// #define CURSOR_FIX 0
-// #define CURSOR_DIR_L 0 
-// #define CURSOR_DIR_R 4
+// #define LCD_CURSOR_OR_DISP_SHIFT 16
+// #define LCD_CURSOR_MOVING 8
+// #define LCD_CURSOR_FIX 0
+// #define LCD_CURSOR_DIR_L 0 
+// #define LCD_CURSOR_DIR_R 4
 
 // function set
-#define FUNCTION_SET 32
-#define INTERFACE_8B 16 // only work with 8 bits for the moment
-#define INTERFACE_4B 0
-#define DISPLAY_LINE_2 8
-#define DISPLAY_LINE_1 0
-#define FONT_TYPE_BIG 4 // seems useless since characters still have same size
-#define FONT_TYPE_SMALL 0
+#define LCD_FUNCTION_SET 32
+#define LCD_INTERFACE_8B 16 // only work with 8 bits for the moment
+#define LCD_INTERFACE_4B 0
+#define LCD_DISPLAY_LINE_2 8
+#define LCD_DISPLAY_LINE_1 0
+#define LCD_FONT_TYPE_BIG 4 // seems useless since characters still have same size
+#define LCD_FONT_TYPE_SMALL 0
 
 // set CGRAM address
-#define SET_CGRAM_ADDR 64
+#define LCD_SET_CGRAM_ADDR 64
 
 // set DDRAM address
-#define SET_DDRAM_ADDR 128
+#define LCD_SET_DDRAM_ADDR 128
 
 // write and read command
 #define LCD_READ 1
 #define LCD_WRITE 0
 
-#define IR_REGISTER 0
-#define DR_REGISTER 2
+#define LCD_IR_REGISTER 0
+#define LCD_DR_REGISTER 2
 #define LCD_ENABLE (1 << 2)
 #define LCD_DELAY_US 1
 #define LCD_EXEC_DELAY_SHORT_US 50 // execution delay of a short command
