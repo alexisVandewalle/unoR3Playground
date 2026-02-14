@@ -2,6 +2,8 @@
 #ifndef DHT11_H
 #define DHT11_H
 
+#include "macro.h"
+
 #define DHT11_START_SIG_DUR_MS 18
 #define DHT11_RESP_SIG_DUR_US 80
 #define DHT11_DATA_SIG_DUR_US 50
@@ -18,48 +20,45 @@
 #define DHT11_TIMEOUT_CODE 2
 
 /**
+ * Struct containing IO setup of DHT11 sensor
+ */
+typedef struct {
+    volatile uint8_t* dirReg; // direction register address
+    volatile uint8_t* portReg; // port register address
+    volatile uint8_t* pinReg; // pin register address
+    uint8_t pin; // pin value (use for all register)
+} dht11IOSetup;
+
+/**
  * Set timer 0 in normal mode and set prescale factor
  */
 void dht11_configTimer();
 
 /**
  * Send start signal to DHT11 sensor and configure data wire as input
- * @param dirReg direction register
- * @param dirRegBit bit number in dirReg
- * @param port port register
- * @param portBit bit number in port
+ * @param setup variable containing IO setup of sensor 
  */
-void dht11_sendStartSignal(volatile uint8_t* dirReg, uint8_t dirRegBit, volatile uint8_t* port, char portBit);
+void dht11_sendStartSignal(dht11IOSetup setup);
 
 /**
  * After start signal is sent, sensor start to output data. This function retrieves the data
  * and save it in temperature and humidity variable
- * @param dirReg direction register
- * @param dirRegBit bit number in dirReg
- * @param pin pin register
- * @param pinBit bit number in pin register
- * @param temp variable in which to store temperature
+ * @param setup variable containing IO setup of sensor 
+ * @param tempI variable in which to store temperature integral part
+ * @param tempD variable in which to store temperature decimal part
  * @param humidity variable in which to store humidity
  * @return 1 if data was succesfuly read, 0 if parity chek failed, 2 if a timeout occurs
  */
-uint8_t dht11_getData(volatile uint8_t* dirReg, uint8_t dirRegBit, volatile uint8_t* pin, volatile uint8_t pinBit, uint8_t* temp, uint8_t* humidity);
+uint8_t dht11_getData(dht11IOSetup setup, uint8_t* tempI, uint8_t* tempD, uint8_t* humidity);
 
 /**
  * Configure timer, send start signal and get data
- * 
- * @param dirReg direction register
- * @param dirRegBit bit number in dirReg
- * @param port port register
- * @param portBit bit number in port
- * @param pin pin register
- * @param pinBit bit number in pin register
- * @param temp variable in which to store temperature
+ *
+ * @param setup variable containing IO setup of sensor 
+ * @param tempI variable in which to store temperature integral part
+ * @param tempD variable in which to store temperature decimal part
  * @param humidity variable in which to store humidity
  * @return 1 if data was succesfuly read, 0 if parity chek failed, 2 if a timeout occurs
  */
-uint8_t dht11_measure(
-            volatile uint8_t* dirReg, uint8_t dirRegBit, 
-            volatile uint8_t* port, char portBit,
-            volatile uint8_t* pin, volatile uint8_t pinBit, 
-            uint8_t* temp, uint8_t* humidity);
+uint8_t dht11_measure(dht11IOSetup setup, uint8_t* tempI, uint8_t* tempD, uint8_t* humidity);
 #endif
